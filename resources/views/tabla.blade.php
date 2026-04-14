@@ -41,6 +41,6 @@
 @if($pagina * $porPagina < $total)
     <a class="botonesPaginacion" href="{{ route('archivo.paginacion', ['pagina' => $pagina + 1]) }}">Siguiente</a>
 @endif
-    
+    <a class="botonesPaginacion" href="{{ route('inicio')}}">Volver al inicio</a>
 </body>
 </html>
