@@ -49,14 +49,15 @@ class ArchivoControlador extends Controller{
         };
 
         $pagina = request()->get('pagina', 1);
-        $PorPagina = 10;
-        $datosPagina = array_slice($datos, ($pagina - 1) * $PorPagina, $PorPagina);
+        $porPagina = 10;
+        $datosPagina = array_slice($datos, ($pagina - 1) * $porPagina, $porPagina);
 
         return view('tabla', [
             'columnas' => $columnas,
             'datos' => $datosPagina,
             'total' => count($datos),
-            'pagina' => $pagina
+            'pagina' => $pagina,
+            'porPagina' => $porPagina,
         ]);
     }
 
