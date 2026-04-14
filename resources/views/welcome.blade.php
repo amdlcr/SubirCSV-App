@@ -24,13 +24,20 @@
     <body>
 
     <div class="contenedor_inicio">
-    <form action="" method="GET" >
+    <form action="{{ route('archivo.leer') }}" method="POST" enctype="multipart/form-data" >
+     @csrf  <!--laravel bloquea la peticion si no verifica que el formulario es legitimo-->
         <p> Bienvenido!</p>
-        <p> Introduce aquí tu archivo cvs para poder verlo</p>
-        <input class="entrada_archivo" type="text"  name ="buscar" placeholder="Selecciona tu archivo">
+        <p> Selecciona un archivo CSV para poder verlo</p>
+        <input class="entrada_archivo" type="file"  name ="buscar" accept=".csv" required >
         <button class="boton_buscar" type="submit" >Subir archivo</button>
     
     </form>
     </div>
+    @if ($errors->any())
+        <div class ="error">
+            {{ $errors->first() }}
+        </div>
+    @endif
+
     </body>
 </html>
