@@ -4,61 +4,86 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
+use SplFileObject;
 
 class ArchivoControlador extends Controller{
 
-    public function leer(Request $request){
-        $request->validate(['buscar'=> 'required|mimes:csv,txt']);
-        $archivo =$request->file('buscar');
-
-        $datos = [];
-        $columnas =[];
-
-        if(($archivoAbierto=fopen($archivo->getPathname(),'r')) === false){
-            return back()->withErrors('No se ha podido abrir el archivo');
-        }
-            
-        $columnas = fgetcsv($archivoAbierto, 1000,';');// fgetcsv() permite leer las filas de un archivo csv. El primer parametro es en alcribo en modo lectura, luego el numero maximo sde caracteres y el simbolo que separa las columnas.
-        if(empty($columnas)){
-            return back()->withErrors('El archivo CVS esta vacio');
-        };
-
-       
-        while(($filas =fgetcsv($archivoAbierto, 1000,';')) !== false){ 
-            $datos[] = array_combine($columnas,$filas);
-        }
-
-        fclose($archivoAbierto);
-
-        session([
-            'leerDatos' => $datos,
-            'leerColumnas'=> $columnas
+    public function leer(Request $request)
+    {
+        //validacion del archivo que se va acargar
+        $request->validate([
+            'anadirArchivo' => 'required|file|mimes:csv,txt'
+        ], [
+            'anadirArchivo.required' => 'Debes subir un archivo.',
+            'anadirArchivo.file' => 'Debes subir un archivo válido.',
+            'anadirArchivo.mimes' => 'El archivo debe ser tipo csv o txt.'
         ]);
 
-        return redirect()->route('archivo.paginacion');
-    }
+        
+        $archivo= $request->file('anadirArchivo'); //Accedemos al archivo una vez es valido
+        $archivoAlmacenado = $archivo->store('csv'); //Guardamos el archivo
 
+        //Enviamos los datos a la vista de visualizacion del archivo y ejecutamos el método paginacion()
+        return redirect()->route('archivo.paginacion',
+         ['archivo' => $archivoAlmacenado,
+          'pagina' => 1
+         ]);
+    }
 
     public function paginacion(Request $request){
-        $datos = session('leerDatos',[]);
-        $columnas= session('leerColumnas',[]);
+        $archivo = $request->get('archivo'); //Recibimos el archivo
 
-        if(!$datos){
-                return redirect()->route('archivo.index')
-                ->withErrors('No se ha podido abrir el archivo');
-        };
+        //Si no llega el archivo guardado devuelve al inicio y con mensaje de error
+        if (!Storage::exists($archivo)) {
+            return redirect()->route('inicio')->withErrors('Archivo no encontrado');
+        }
 
-        $pagina = request()->get('pagina', 1);
-        $porPagina = 10;
-        $datosPagina = array_slice($datos, ($pagina - 1) * $porPagina, $porPagina);
+        $rutaAbsoluta = Storage::path($archivo);//convertimos en ruta real para SplFileObject
 
-        return view('tabla', [
+        $objetoLectura = new SplFileObject($rutaAbsoluta); //creamos el objeto de lectura
+        $objetoLectura->setFlags(SplFileObject::READ_CSV); //Le decimos como debe leerlo, como csv. Porque esta clase lee mas tipos de archivos
+        $objetoLectura->setCsvControl(';'); //explicamos en separador
+
+        $pagina = max(1, (int) $request->get('pagina', 1));//VErificamos que pagina siempre sea 1 sino le llegan el resto
+        $filasPorPagina = 10; //numero de filas que se van a amostrar por pagina
+
+        $columnas = $objetoLectura->fgetcsv(); // lee las cabeceras de las columnas
+
+        //Si encuentra la primera fila/encabezados retorna a la pagina de inicio con mensaje de error
+        if (!$columnas) {
+            return back()->withErrors('El archivo esta vacío.');
+        }
+
+        $columnas = array_map(function ($col) { //Limpiamos los encabezados de la tabla
+            $col = trim($col); //limpiamos espacios en blanco por delante y detras
+            $col = str_replace(['-', '_'], ' ', $col); // cambio los guiones por espacios
+            $col = preg_replace('/[^A-Za-z0-9 ]/', '', $col); // solo permite letras , numero y espacios
+            $col = ucwords(strtolower($col)); //todo el texto en minuscula, menos la primera letra en mayusculas
+
+            return $col;
+        }, $columnas); 
+
+        //paginacion, solo se leen 10 paginas por linea
+        $inicio = ($pagina - 1) * $filasPorPagina;
+        $objetoLectura->seek($inicio + 1);
+
+       
+        $datos = []; //creamos el array donde vamos a almacenar la informacion del archivo
+         //Recorremos el archivo de datos y vamos llenando cada fila en un array
+        for ($i = 0; $i < $filasPorPagina && !$objetoLectura->eof(); $i++) { //eof() funcion de la clase que le indica cuando tiene que parar de leer
+            $fila = $objetoLectura->fgetcsv();// fgetcsv() funcion que lee cada fila
+            if (!$fila || $fila === [null]) continue;//saltamos filas vacias 
+            $datos[] = array_combine($columnas, $fila);//funcion guarda los datos como array estructurado con los datos de todas las filas
+        }
+
+        //Enviamos la informacion a la vista donde se muestra
+        return view('visualizacionArchivo', [
             'columnas' => $columnas,
-            'datos' => $datosPagina,
-            'total' => count($datos),
+            'datos' => $datos,
             'pagina' => $pagina,
-            'porPagina' => $porPagina,
+            'filasPorPagina' => $filasPorPagina,
+            'archivo' => $archivo
         ]);
     }
-
 }
