@@ -46,17 +46,27 @@ class ArchivoControlador extends Controller{
         $totalFilas= count(file($rutaAbsoluta))-1;//Contamos las lineas del archivo y quitamos la fila de la cabecera
 
         $objetoLectura = new SplFileObject($rutaAbsoluta); //creamos el objeto de lectura
+        //Verificamos que simbolo se repite mas veces en el encabezado de la tabla para saber cual es el separador del archivo
+        $encabezado = $objetoLectura->fgets();
+        $comas = substr_count($encabezado, ',');
+        $puntoComas = substr_count($encabezado, ';');
+        $separador=($puntoComas > $comas) ? ';' : ',';
+
+        $objetoLectura->rewind();//Hacemos que el archivo se lea desde el principio otra vez
         $objetoLectura->setFlags(SplFileObject::READ_CSV); //Le decimos como debe leerlo, como csv. Porque esta clase lee mas tipos de archivos
-        $objetoLectura->setCsvControl(';'); //explicamos en separador
+        $objetoLectura->setCsvControl($separador); //explicamos en separador
 
         $paginaActual = LengthAwarePaginator::resolveCurrentPage();//
-        $filasPorPagina = 5; //numero de filas que se van a amostrar por pagina
+        $filasPorPagina = (int) $request->get('opcionesVista', 10); //numero de filas que se van a amostrar por pagina
+
+
 
         $columnas = $objetoLectura->fgetcsv(); // lee las cabeceras de las columnas
         //Si encuentra la primera fila/encabezados retorna a la pagina de inicio con mensaje de error
         if (!$columnas) {
             return back()->withErrors('El archivo esta vacío.');
         }
+
 
         //Limpiamos los encabezados de la tabla
         $columnas = array_map([$this, 'normalizarTexto'], $columnas);
@@ -71,8 +81,12 @@ class ArchivoControlador extends Controller{
         for ($i = 0; $i < $filasPorPagina && !$objetoLectura->eof(); $i++) { //eof() funcion de la clase que le indica cuando tiene que parar de leer
             $fila = $objetoLectura->fgetcsv();// fgetcsv() funcion que lee cada fila
             if (!$fila || $fila === [null]) continue;//saltamos filas vacias 
-            $datos[] = array_combine($columnas, $fila);//funcion guarda los datos como array estructurado con los datos de todas las filas
-        }
+                if (count($columnas) === count($fila)) {
+                $datos[] = array_combine($columnas, $fila);//funcion guarda los datos como array estructurado con los datos de todas las filas
+                }else{ 
+                    return back()->withErrors('No es posible leer el archivo introducido. Su estructura es errónea.');
+                };
+            }
 
         $paginador = new LengthAwarePaginator(  //Clase de laravel para paginar
             $datos, 
@@ -95,8 +109,19 @@ class ArchivoControlador extends Controller{
             'datos'=> $paginador,
             'archivo' => $archivo,
             'nombreArchivo'=> $nombreArchivo,
-            'paginasBarra'=>$paginasBarra
+            'paginasBarra'=>$paginasBarra,
+            'totalFilas'=>$totalFilas,
+            'filasPorPagina'=>$filasPorPagina
         ]);
+    }
+
+    public function cerrarArchivo(Request $request){
+        $archivo = $request->input('archivo');
+
+        if (Storage::exists($archivo)) {
+            Storage::delete($archivo);
+        }
+      return redirect()->route('inicio');
     }
 
     public function calculoNavegacionPaginas($paginador, $totalMostrar){
