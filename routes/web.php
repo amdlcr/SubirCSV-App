@@ -7,4 +7,5 @@ Route::get('/', function () {return view('index');})->name('inicio');
 
 Route::post('/archivo', [ArchivoControlador::class, 'leer'])->name('archivo.leer');
 Route::get('/archivo', [ArchivoControlador::class, 'paginacion'])->name('archivo.paginacion');
+Route::post('/cerrar', [ArchivoControlador::class, 'cerrarArchivo'])->name('cerrar.archivo');
 
