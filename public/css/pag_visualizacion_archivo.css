@@ -99,7 +99,6 @@ h4 {
   display: flex;
   flex-direction: column; 
   align-items: center;   
-  gap: 10px; 
   width: fit-content;    
   margin-left: auto;           
 }
@@ -107,7 +106,7 @@ h4 {
   display: flex;          
   align-items: center;
   justify-content: center; 
-  gap: 10px;
+  gap: 5px;
 }
 .numeros-paginacion {
   display: flex;
@@ -127,4 +126,22 @@ h4 {
 .contadorPaginas {
   margin: 0;
   text-align: center;
+  font-size: 12px;
+}
+/*----------------CONTADOR REGISTROS---------------*/
+.contadorFilas{
+   text-align: left;
+}
+
+.barraInferior{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;          
+  width: 100%; 
+}
+
+/*----------SELECTOR VISTA ------------*/
+.opcionesVista{
+  border-radius: 6px;
+  margin-bottom: 10px;
 }
