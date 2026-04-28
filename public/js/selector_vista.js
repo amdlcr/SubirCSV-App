@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    const selector = document.getElementById('selectorVistas');
+    const selector = document.getElementById('opcionesVista');
     
     if (selector) {
         selector.addEventListener('change', function() {

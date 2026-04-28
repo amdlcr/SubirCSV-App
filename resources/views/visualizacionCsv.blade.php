@@ -30,7 +30,7 @@
             <input type="hidden" name="opcionesBuscar" value="{{ request('opcionesBuscar') }}">
             
             <label for="opcionesVista">Mostrar:</label>
-                <select name="opcionesVista" id="selectorVistas" class="opcionesVista">
+                <select name="opcionesVista" id="opcionesVista" class="opcionesVista">
                     @foreach([5, 10, 20, 50] as $vistas)
                         <option value="{{ $vistas }}" {{ $filasPorPagina == $vistas ? 'selected' : '' }}>
                             {{ $vistas }}
