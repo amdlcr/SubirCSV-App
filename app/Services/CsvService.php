@@ -27,9 +27,10 @@ class CsvService {
         $busqueda = !empty($textoBuscar);
         $busquedaNormalizada = $busqueda ? strtolower($this->normalizarTexto($textoBuscar)) : '';
 
-        
-        foreach ($objetoLectura as $fila) {
+        $objetoLectura->seek(1);
+        foreach ($objetoLectura as $indice => $fila) {
        
+            if ($indice === 0) continue;//evitamos que salga la cabecera en las filas
             if (!$fila || $fila === [null] || count($fila) !== count($columnasNormalizadas)) continue;
 
         

@@ -51,7 +51,6 @@ class CsvController extends Controller{
         }
         
         $todasLasFilas = $resultado['filas'];
-        array_shift($todasLasFilas);//limpia el primer registro del array
         $totalFilas= count($todasLasFilas);
         $paginaActual = LengthAwarePaginator::resolveCurrentPage();//   
         $filasPorPagina = (int) $request->get('opcionesVista', 10); //numero de filas que se van a amostrar por pagina
