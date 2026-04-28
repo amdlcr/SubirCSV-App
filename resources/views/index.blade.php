@@ -11,7 +11,7 @@
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
         <!-- CSS -->
-        <link rel="stylesheet" href="{{ asset('css/pag_inicio.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/pag_index.css') }}">
 
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
