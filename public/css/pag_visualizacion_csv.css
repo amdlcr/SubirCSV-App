@@ -1,0 +1,166 @@
+body {
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  background: #cae9f0;
+  margin: 2;
+  padding: 10px;
+}
+
+/*--ENCABEZADOS--*/
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #3d98ab;
+  font-style: italic;
+}
+h4 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #145967;
+}
+
+/*--TABLA--*/
+.contenedor_tabla {
+  max-width: 1200px;
+  margin: auto;
+}
+.tabla {
+  width: 100%;
+  border-collapse:collapse;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tabla thead {
+  background-color: #4cbed5;
+  color: white;
+}
+
+.tabla th {
+  padding: 12px 15px;
+  text-align: centre;
+  border-right: 1px solid #e0e0e0;
+}
+
+.tabla td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+}
+
+/*--BOTONES NAVEGACION--*/
+.botonVolver {
+  float: left;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  background: none;
+  border: none;
+  cursor: pointer; 
+  outline: none;
+}
+.botonVolver svg {
+  width: 30px;
+  height: 30px;
+  fill: #1f8ba0; 
+}
+
+.botonDerecha {
+  float: right;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+}
+.botonDerecha svg {
+  width: 30px;
+  height: 30px;
+  fill: #1f8ba0; 
+}
+
+.botonIzquierda{
+  float: right;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+}
+
+.botonIzquierda svg {
+  width: 30px;
+  height: 30px;
+  fill: #1f8ba0; 
+}
+
+/*--ERRORES--*/
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+/*--PAGINACION--*/
+.paginacion {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;   
+  width: fit-content;    
+  margin-left: auto;           
+}
+.botonesPaginacion{
+  display: flex;          
+  align-items: center;
+  justify-content: center; 
+  gap: 5px;
+}
+.numeros-paginacion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.numero {
+  text-decoration: none;
+  color: #333;
+  border-radius: 4px;
+  margin: 0 2px;
+}
+.pagina-activa {
+  color: #007bff;   
+  font-weight: bold;
+}
+.contadorPaginas {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+}
+/*--CONTADOR REGISTROS--*/
+.contadorFilas{
+   text-align: left;
+}
+
+.barraInferior{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;          
+  width: 100%; 
+}
+
+/*--SELECTOR VISTA Y BUSCADOR--*/
+.opcionesVista.inputBuscar.opcionesBuscar{
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.buscador{
+text-align: right;
+margin-bottom: 10px;
+cursor: pointer;
+}
+
+.barraSuperior{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;          
+  width: 100%;
+
+}
