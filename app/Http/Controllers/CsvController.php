@@ -18,7 +18,12 @@ class CsvController extends Controller{
         $this->csvService = $csvService;
     }
 
-//TENGO QUE DESCRIBIR LOS METODOS Y HACER SU DOMUMENTACION
+    /**
+     * Recoge el archivo CSV y lo almacena en el servidor.
+     *
+     * @param  \App\Http\Requests\CsvRequest  $request con el archivo.
+     * @return \Illuminate\Http\RedirectResponse Redirige a la ruta de visualizacion, y devuelve un array con 'archivo' y 'nombreArchivo'.
+     */
     public function leer(CsvRequest $request){
         
         $archivo= $request->file('anadirArchivo'); //Accedemos al archivo 
@@ -31,6 +36,12 @@ class CsvController extends Controller{
          ]);
     }
 
+    /**
+     * Procesa y muestra el contenido del CSV con soporte para busqueda y paginacion.
+     *
+     * @param  \Illuminate\Http\Request  $request con parámetros de filtro, archivo y página.
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse Vista con datos paginados o redirección por error, con los parametros necesarios para la vista.
+     */
     public function mostrar(Request $request){
         $archivo = $request->get('archivo'); 
         if (!Storage::exists($archivo)) {
@@ -84,6 +95,12 @@ class CsvController extends Controller{
         ]);
     }
 
+    /**
+     * Elimina un archivo CSV del almacenamiento si existe.
+     *
+     * @param  \Illuminate\Http\Request  $request Objeto que debe contener la ruta del archivo.
+     * @return \Illuminate\Http\RedirectResponse Redireccion a la ruta 'index'.
+     */
     public function eliminarCsv(Request $request){
         $archivo = $request->input('archivo');
 
