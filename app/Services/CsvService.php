@@ -4,6 +4,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Storage;
 use SplFileObject;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Servicio CsvService
@@ -14,58 +15,98 @@ use Illuminate\Http\Request;
  */
 class CsvService {
 
-    /**
-     * Busca y procesa el contenido de un archivo CSV aplicando filtros opcionales.
-     *
-     * @param string      $archivo       Ruta relativa del archivo.
-     * @param string|null $textoBuscar   Texto a buscar en los datos.
-     * @param string|null $filtroBuscar  Encabezado de la columna donde buscar.
-     * @param string|null $separador     Caracter separador (si es null, se detecta automaticamente). 
-     * @return array|null Devuelve un array con 'columnas', 'filas' y 'separador', o null si el archivo esta vacio.
-     */
-    public function buscar($archivo, $textoBuscar=null, $filtroBuscar=null,$separador=null){
 
-        $rutaAbsoluta = Storage::path($archivo);//convertimos en ruta abosoluta para SplFileObject
-        if(!$separador){
-            $separador = $this->detectarSeparador($rutaAbsoluta); //Detectamos el separador del archivo y si ya lo tenemos trabajamos con ese
-        }
-        $objetoLectura = new SplFileObject($rutaAbsoluta); 
-        $objetoLectura->setFlags(SplFileObject::READ_CSV); 
+    /**
+     * Procesa un archivo CSV introducido por el usuario: normaliza su contenido y establece punto y coma(;) como su delimitador,
+     * para finalmente crear un archivo con el que trabajar en el resto del programa.
+     *
+     * @param string $archivo Ruta relativa del archivo.
+     * @return void
+     */
+    public function preprocessCsv($archivo){
+
+        $archivoInput = Storage::path($archivo);//convertimos en ruta el archivo que introduce el usuario
+        $separador = $this->detectarSeparador($archivoInput); //Detectamos el separador del archivo 
+
+        //Creamos el objeto de lectura
+        $objetoLectura = new \SplFileObject($archivoInput); 
+        $objetoLectura->setFlags(SplFileObject::READ_CSV | \SplFileObject::SKIP_EMPTY | \SplFileObject::DROP_NEW_LINE); 
         $objetoLectura->setCsvControl($separador); //explicamos que separador usa el archivo
 
-        $columnas = $objetoLectura->fgetcsv();
-            if (!$columnas){return null;} 
-
-        $columnasNormalizadas = array_map([$this, 'normalizarTexto'], $columnas);//Limpiamos los encabezados de la tabla
-        $datos = [];
-
-        $busqueda = !empty($textoBuscar);
-        $busquedaNormalizada = $busqueda ? $this->normalizarTexto($textoBuscar) : '';
-
-        $objetoLectura->seek(1);
-        foreach ($objetoLectura as $indice => $fila) {
-       
-            if ($indice === 0) continue;//evitamos que salga la cabecera en las filas
-            if (!$fila || $fila === [null] || count($fila) !== count($columnasNormalizadas)) continue;
-
-        
-            if ($busqueda) {
-                $valor = isset($fila[$filtroBuscar]) ? $this->normalizarTexto($fila[$filtroBuscar]) : '';
-                
-                if (!str_contains($valor, $busquedaNormalizada)) {
-                    continue; 
-                }
-            }
-            
-            $datos[] = array_combine($columnasNormalizadas, $fila);
+        $archivoProcesado = $archivoInput . '.tmp';//creamos un archivo temporal
+        $puntero = fopen($archivoProcesado, 'w');//Abre el archivo temporal en modo escritura
+     
+        //Recorre el archivo de lectura fila por fila, normalizando el texto,y guarda en el nuevo archivo temporal cada fila con su separador(;)
+        foreach ($objetoLectura as $fila) {
+            if (!isset($fila[0])) continue; //Si no hay nada en la primera columna de la fila salta a la siguiente
+            $filaProcesada = array_map([$this, 'normalizarTexto'], $fila);
+            fputcsv($puntero, $filaProcesada, ';');
         }
-            
-        return [
-            'columnas' => $columnasNormalizadas,
-            'filas' => $datos,
-            'separador' => $separador
+        fclose($puntero);//Cierra el archivo temporal
+        $objetoLectura = null; 
+        
+        unlink($archivoInput); //Elimina el archivo que introdujo el usuario
+        rename($archivoProcesado, $archivoInput);//Pamos el archivo temporal como el nuevo archivo
+    }
+
+
+    /**
+     * Procesa un archivo CSV ya tratado y lo convierte en un array asociativo.
+     *
+     * @param string $archivoProcesado Ruta relativa del archivo dentro del Storage.
+     * @return array Un array con las cabeceras y los datos mapeados.
+     */
+    public function processCsv($archivoProcesado) {
+        //Recibimos la ruta del archivo y creamos el objeto de lectura para poder recorrer la informacion
+        $archivoRuta = Storage::path($archivoProcesado);
+        $objetoLectura = new \SplFileObject($archivoRuta);
+        $objetoLectura->setFlags(SplFileObject::READ_CSV | SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE);
+        $objetoLectura->setCsvControl(';'); 
+
+        $columnas = $objetoLectura->fgetcsv();//lee la primera fila del archivo para obtener la cabecera
+        $todasLasFilas = [];
+
+        while (!$objetoLectura->eof()) {//mientras no llegue al final del archivo sigue leyendo
+        $fila = $objetoLectura->fgetcsv(); //Guarda la informacion de cada fila
+        
+            if (is_array($fila) && count($fila) === count($columnas)) {//verifica que sea un fila de datos y que tenga el mismo numero de datos en cada fila que en la cabecera
+                $todasLasFilas[] = array_combine($columnas, $fila); //guarda en un array asociativo los datos de las filas con sus cabeceras, asi podremos buscar
+            }
+        }
+        
+        //Devolvemos la informacion de las filas y la cabecera de la tabla
+        return ['columnas' => $columnas, 
+                'filas' => $todasLasFilas
         ];
     }
+
+    
+    /**
+     * Filtra el array de filas basandose en un termino de busqueda y una columna seleccionada.
+     *
+     * @param array $todasLasFilas Array asociativo con los datos del archivo.
+     * @param string|null $textoBuscar El texto que el usuario desea encontrar.
+     * @param string $columnaFiltro El nombre de la columna donde se realizara la busqueda.
+     * @return array El array con las filas que coinciden con la busqueda.
+     */
+    public function filtrarFilas($todasLasFilas, $textoBuscar, $columnaFiltro) {
+        if (empty($textoBuscar)){//Si el usuario no busca se muestra el archivo con toda la informacion
+            return $todasLasFilas;
+        }  
+        $busqueda = mb_strtolower($textoBuscar, 'UTF-8');//Normalizamos el texto introducido en el buscador      
+        
+        //array_filter recorre cada fila. Si la función retorna true, la fila se guarda en $filasFiltradas
+        $filasFiltradas = array_filter($todasLasFilas, function($fila) use ($busqueda, $columnaFiltro) {
+         //Verificamos si la columna existe en la fila, si existe pasamos su contenido a minusculas y sino dejamos un texto vacio
+            $valorFila = isset($fila[$columnaFiltro]) ? mb_strtolower($fila[$columnaFiltro], 'UTF-8') : '';
+            
+                return str_contains($valorFila, $busqueda); //Comprobamos si el texto de busqueda esta en la fila. Retorna true (se queda la fila) o false (se elimina).
+            });
+
+        return array_values($filasFiltradas);// array_values elimina los huecos vacios del array para que no falle la paginacion, reordena.
+    }
+
+   
 
     /**
      * Determina el separador de las columna (',' o ';') analizando la cabecera de la tabla.
@@ -73,7 +114,8 @@ class CsvService {
      * @param string $rutaAbsoluta Ruta completa hacia el archivo.
      * @return string Devuelve el caracter separador detectado.
      */
-    public function detectarSeparador($rutaAbsoluta){  //Verificamos que simbolo se repite mas veces en el encabezado de la tabla para saber cual es el separador del archivo
+    public function detectarSeparador($rutaAbsoluta){  
+        //Verificamos que simbolo se repite mas veces en el encabezado de la tabla para saber cual es el separador del archivo
         $objetoLectura = new SplFileObject($rutaAbsoluta);
         $encabezado = $objetoLectura->fgets();
 
@@ -93,10 +135,40 @@ class CsvService {
         $texto = mb_convert_encoding($texto, 'UTF-8', mb_detect_encoding($texto, 'UTF-8, ISO-8859-1, Windows-1252', true));//Aseguramos que el texto sea UTF-8
         $texto = trim($texto); //limpiamos espacios en blanco por delante y detras
         $texto = str_replace(['-', '_'], ' ', $texto); // cambio los guiones por espacios
-        $texto = preg_replace('/[^A-Za-z0-9 áéíóúÁÉÍÓÚüÜñÑ]/u', '', $texto); // solo permite letras , numero y espacios
+        $texto = preg_replace('/[^A-Za-z0-9 áéíóúÁÉÍÓÚüÜñÑ@.€]/u', '', $texto); // solo permite letras , numero y espacios
         $texto = ucwords(mb_strtolower($texto, 'UTF-8')); //todo el texto en minuscula, menos la primera letra en mayusculas
         return $texto;
     }
 
+
+    /**
+     * Convierte un array de datos en un objeto de paginacion de Laravel.
+     * 
+     * @param array $filas El conjunto total de filas a paginar.
+     * @param int $porPagina Cantidad de registros que se mostraran en cada pagina.
+     * @param \Illuminate\Http\Request $request La peticion actual para mantener los parametros de busqueda.
+     * @return \Illuminate\Pagination\LengthAwarePaginator El objeto que genera la navegacion en la vista.
+     */
+    public function paginar($filas, $porPagina, $request) {
+   
+        $paginaActual = LengthAwarePaginator::resolveCurrentPage();//Detectamos en que pagina esta el usuario
+        
+        $inicio = ($paginaActual - 1) * $porPagina; //Calcula donde empieza a mostrar los datos
+        $datosPaginados = array_slice($filas, $inicio, $porPagina); // Extrae una parte de los datos usando el inicio calculado y la cantidad de datos que hay por pagina
+        
+        //Crea el objeto de Laravel para paginar
+        $paginador = new LengthAwarePaginator(
+            $datosPaginados, 
+            count($filas), 
+            $porPagina, 
+            $paginaActual, 
+            [
+                'path' => $request->url(),
+                'query' => $request->query(), // Mantiene los filtros de busqueda al cambiar de pagina
+            ]
+        );
+        //Configura que se muestren 2 numeros de pagina a cada lado de la pagina actual en la barra de navegacion
+        return $paginador->onEachSide(2);
+    }
+
 }
-//la paginacion aqui
