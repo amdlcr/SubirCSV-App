@@ -43,10 +43,11 @@
             <input type="hidden" name="archivo" value="{{ $archivo }}"><!-- Asi le indicamos a la vista al navegar en que archivo estamos  -->
             <input type="text" class="inputBuscar" name="inputBuscar"  value="{{ request('inputBuscar') }}" placeholder="¿Qué quieres buscar?">    
                 <select class="opcionesBuscar" name="opcionesBuscar">
-                    @foreach($columnas as $indice => $nombreColumna)
-                    <option value="{{ $indice }}" {{ request('opcionesBuscar') == $indice ? 'selected' : '' }}>
-                        {{ $nombreColumna }}
-                    </option>
+                    @foreach($columnas as $nombreColumna)
+                        <!-- Quitamos el $indice y usamos el nombre directamente -->
+                        <option value="{{ $nombreColumna }}" {{ request('opcionesBuscar') == $nombreColumna ? 'selected' : '' }}>
+                            {{ $nombreColumna }}
+                        </option>
                     @endforeach
                 </select>
             <button type="submit">Buscar</button>
