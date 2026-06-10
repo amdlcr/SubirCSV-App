@@ -67,10 +67,14 @@ class LoginRequest extends FormRequest
         event(new Lockout($this));
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
-
+//Aqui va la correcion de Vivian
         throw ValidationException::withMessages([
-            'email' => 'Demasiados intentos de inicio de sesión. Por favor, inténtelo de nuevo en 2 minutos.',
+            'email' => trans('auth.throttle', [
+                'seconds' => $seconds,
+                'minutes' => ceil($seconds / 60),
+            ]),
         ]);
+
     }
 
     /**

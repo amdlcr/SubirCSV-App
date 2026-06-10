@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CsvController;
 
 Route::get('/', function () {
-    return view('inicioSesion');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
@@ -16,6 +16,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/configuracion', function () {return view('profile.configuracion');})->name('profile.configuracion');
 
     //Ruta GET: Carga la pantalla de bienvenida 
     Route::get('/inicio', [CsvController::class, 'index'])->name('index');

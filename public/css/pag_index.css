@@ -1,77 +1,170 @@
-body {
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  background: #cae9f0;
-   margin: 0 !important;
-  padding: 0 !important;
-  height: 100% !important;
+
+.entrada_archivo {
+  display: none;
 }
+
 .contenedor_inicio {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
+  justify-content: center;
   align-items: center;
-  justify-content: center; 
-  background: white;
+  min-height: 85vh;
+  width: 100%;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-  width: 500px;
-  text-align: center;
-  border: 2px solid rgb(180, 180, 180);
-  margin: calc((100vh - 70px - 260px) / 2) auto 0 auto;
+  box-sizing: border-box;
+  gap: 20px;
 }
 
-.entrada_archivo{
-  display: none; /*para que no salgan los mensajes de subir del propios del input*/
+/*-- Tarjeta --*/
+.tarjeta_bienvenida {
+  display: flex;
+  flex-direction: row; 
+  background: rgba(255, 255, 255, 0.95); 
+  backdrop-filter: blur(8px);
+  border-radius: 20px; 
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.06);
+  max-width: 620px;
+  width: 100%;
+  height: 260px; 
+  min-height: 260px;
+  transition: border 0.3s ease;
+  position: relative;   
+  z-index: 1;
+  margin-top: 150px; 
 }
 
-.icono_subida {
+.tarjeta-con-error {
+  border: 2px solid #E7475B;
+}
+
+/* -- Bloque izquierda: Boton subida--*/
+.bloque_izquierdo {
+  flex: 1;
   display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: center;
-  width: auto;
-  min-width: 60px;
-  height: 60px;
-  padding: 0 15px;
-  color:white;
-  background-color: #4cbed5;
-  border-radius: 10px; 
-  margin: 10px auto; 
+  padding: 30px;
+  box-sizing: border-box;
 }
 
-.icono_subida svg{
-  width:50px;  
-  height: 50px;
+.grupo_subida {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 15px;
+  width: 100%;
 }
 
+.texto_instruccion {
+  font-size: 0.85rem;
+  color: #173F74;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.boton_imagen_subir {
+  display: inline-block;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  max-width: 70px; 
+  width: 100%;
+}
+
+.vista_imagen_boton {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.boton_imagen_subir:hover {
+  transform: scale(1.05);
+}
+
+.nombre_archivo_texto {
+  font-size: 0.85rem;
+  color: #1f8ba0;
+  font-weight: 600;
+  text-align: center;
+  max-width: 220px;
+  word-break: break-all;
+}
 
 .boton_subir {
-  display: none;
-  flex-direction: column;
+  background-color: #1d5093;
+  color: white;
+  border: none;          
+  padding: 10px 24px;           
+  cursor: pointer;      
+  font-weight: bold;
+  font-size: 0.95rem;
+  border-radius: 8px;
+}
+
+.boton_subir:hover {
+  background-color: #0b2a52;
+}
+
+/* -- Bloque derecha: mascota --*/
+.bloque_derecho {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: none;          
-  padding: 0;           
-  cursor: pointer;      
-  font-family: inherit;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  height: 100%;
 }
 
-.boton_subir svg {
-  width: 40px;
-  height: 40px;
-  display: block;
-  margin: 0 auto;
-  fill: #1f8ba0;
+.mascota {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  margin-top: -180px; 
+  z-index: 10;       
 }
 
-.alerta-error{
-  color: red;
-  font-weight: bold;
-  font-style: italic;
-  display: block;     
-  margin-top: 15px;    
-  text-align: center; 
+.imagen_avatar {
+  width: 290px !important;       
+  max-width: none !important; 
+  height: auto;
+  object-fit: contain;
+}
+
+.mascota .mensaje {
+  background: #eef2f5;
+  padding: 10px 16px;
+  border-radius: 12px;
+  color: #1f2937;
+  font-weight: 600;
+  text-align: center;
+  max-width: 220px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.mascota .mensaje-error {
+  background: #ffeaa7;
+  color: #d63031;
+}
+
+/* -- Mensajes de error --*/
+.alerta-error {
+  background-color: #ffdad9;
+  border-left: 5px solid #E7475B;
+  padding: 12px 20px;
+  border-radius: 8px;
+  max-width: 750px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.alerta-error ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #c0392b;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 

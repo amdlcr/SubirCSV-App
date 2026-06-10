@@ -1,194 +1,296 @@
-body {
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  background: #cae9f0;
-  margin: 0;
-  padding: 0;
-}
-.contenido {
-  padding: 10px 20px !important;
-}
-
-/*--ENCABEZADOS--*/
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #3d98ab;
-  font-style: italic;
-}
-h4 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #145967;
-}
-
-/*--TABLA--*/
-.contenedor_tabla {
+/*-- Contenedor general --*/
+.contenedor_general_csv {
   max-width: 1200px;
-  margin: auto;
-}
-.tabla {
-  width: 100%;
-  border-collapse:collapse;
-  background: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  border-radius: 8px;
-  overflow: hidden;
+  margin: 0 auto;
+  padding: 30px 20px;
+  box-sizing: border-box;
 }
 
-.tabla thead {
-  background-color: #4cbed5;
-  color: white;
-}
-
-.tabla th {
-  padding: 12px 15px;
+/*-- Cabecera --*/
+.bloque_cabecera {
+  position: relative;
   text-align: center;
-  border-right: 1px solid #e0e0e0;
+  margin-bottom: 20px;
 }
 
-.tabla td {
-  padding: 12px 15px;
-  text-align: center;
-  border-bottom: 1px solid #e0e0e0;
-  border-right: 1px solid #e0e0e0;
-}
-
-/*--BOTONES NAVEGACION--*/
 .botonVolver {
-  float: left;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
-  padding: 5px 10px;
-  background: none;
-  border: none;
+  justify-content: center;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
   cursor: pointer; 
-  outline: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
+
+.botonVolver:hover {
+  transform: translateY(-50%) scale(1.08);
+  background: rgba(255, 255, 255, 0.9);
+}
+
 .botonVolver svg {
-  width: 30px;
-  height: 30px;
-  fill: #1f8ba0; 
+  width: 24px;
+  height: 24px;
+  fill: #0c4d5a; 
 }
 
+h4 {
+  margin: 0;
+  color: #fff;      
+  font-size: 1.25rem;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
 
-/*--ERRORES--*/
+h6 {
+  margin: 5px 0 0 0;
+  color: #0f697a;       
+  font-style: italic;
+  font-size: 0.85rem;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/*-- Mensajes de error --*/
 .error {
-  color: red;
+  background-color: #ffdad9;
+  border-left: 5px solid #ff7675;
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: #c0392b;
   font-style: italic;
   font-weight: bold;
-  font-size: 15px;
+  font-size: 0.9rem;
   text-align: center; 
+  margin-bottom: 10px;
 }
 
-
-
-/*--PAGINACION--*/
-.paginacion {
-  display: flex;
-  flex-direction: column; 
-  align-items: center;   
-  width: fit-content;    
-  margin-left: auto; 
-  margin-top: 5px;          
-}
-.botonesPaginacion{
-  display: flex;          
-  align-items: center;
-  justify-content: center; 
-  gap: 5px;
-}
-.botonesPaginacion a svg {
-  width: 30px;
-  height: 30px;
-  display: block;
-  fill: #007bff;
-}
-.botonesPaginacion a.desactivado {
-  opacity: 0.3;             
-  cursor: not-allowed;      
-  pointer-events: none;     
-}
-.numerosPaginacion {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.numero {
-  text-decoration: none;
-  color: #333;
-  border-radius: 4px;
-  margin: 0 2px;
-}
-.pagina-activa {
-  color: #007bff;   
-  font-weight: bold;
-}
-.contadorPaginas {
-  margin: 0;
-  text-align: center;
-  font-size: 12px;
-}
-/*--CONTADOR REGISTROS--*/
-.contadorFilas{
-   text-align: left;
+/*-- Barra utilidades --*/
+.barraSuperior {
+  background: rgba(255, 255, 255, 0.8); 
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 15px 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 10px;
 }
 
-.barraInferior{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;          
-  width: 100%; 
-}
-
-/*--SELECTOR VISTA Y BUSCADOR--*/
-.opcionesVista, .inputBuscar, .opcionesBuscar {
-  border-radius: 5px;
-
-  cursor: pointer;
-}
-
-.buscador{
+.buscador {
   display: flex;                     
   justify-content: space-between;    
   align-items: center;             
   width: 100%;                      
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-.busquedaInputs {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  position: relative; 
 }
 
 .controlVista {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  font-weight: 600;
+  color: #145967;
 }
 
-.barraSuperior{
+.opcionesVista, .opcionesBuscar {
+  padding: 8px 32px 8px 12px; 
+  border: 1px solid #a3d7e2;
+  background-color: white;
+  border-radius: 8px;
+  color: #2c3e50;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+}
+
+.busquedaInputs {
   display: flex;
-  justify-content: space-between;
-  align-items: center;          
-  width: 100%;
+  gap: 8px;
+  align-items: center;
+}
+
+.inputBuscar {
+  padding: 8px 14px;
+  border: 1px solid #a3d7e2;
+  border-radius: 8px;
+  width: 220px;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.inputBuscar:focus, .opcionesBuscar:focus, .opcionesVista:focus {
+  border-color: #0f697a;
+  box-shadow: 0 0 5px rgba(31, 139, 160, 0.3);
+}
+
+.busquedaInputs button[name="botonBuscar"] {
+  background-color: #0f697a;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.busquedaInputs button[name="botonBuscar"]:hover {
+  background-color: #145967;
+}
+
+.busquedaInputs button[name="botonBuscar"]:active {
+  transform: scale(0.97);
 }
 
 .btn-refrescar {
-     display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: none;    
-    border: none;        
-    padding: 0;        
-    cursor: pointer;
-    text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0f4f7;    
+  border: 1px solid #bce4eb;        
+  padding: 8px;        
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
 }
+
 .btn-refrescar:hover {
-    background-color: #d1ecf1;
+  background-color: #c4ebf2;
 }
+
+.btn-refrescar:active {
+  transform: scale(0.97);
+}
+
 .btn-refrescar svg {
-    width: 20px;
-    height: 20px;
+  width: 18px;
+  height: 18px;
+  stroke: #145967; 
+}
+
+/*-- Tabla --*/
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.85); 
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.tabla thead tr:first-child th:first-child { border-top-left-radius: 16px; }
+.tabla thead tr:first-child th:last-child { border-top-right-radius: 16px; }
+
+.tabla thead {
+  background-color: #0c4d5a;
+  color: white;
+}
+
+.tabla th {
+  padding: 14px 16px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.tabla td {
+  padding: 12px 16px;
+  text-align: center;
+  color: #2c3e50;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.tabla tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.tabla tbody tr:hover {
+  background-color: rgba(76, 190, 213, 0.1);
+}
+
+/*-- Pie de pagina --*/
+.barraInferior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;          
+  width: 100%; 
+  margin-top: 15px;
+}
+
+.contadorFilas {
+  margin: 0;
+  font-weight: bold;
+  color: #145967;
+  font-size: 0.95rem;
+}
+
+.paginacion {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;   
+  width: fit-content;    
+}
+
+.botonesPaginacion {
+  display: flex;          
+  align-items: center;
+  justify-content: center; 
+  gap: 6px;
+}
+
+.botonesPaginacion a, .numerosPaginacion a, .numero {
+  text-decoration: none;
+  color: #145967;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.botonesPaginacion a:hover, .numerosPaginacion a:hover:not(.pagina-activa) {
+  background-color: #0f697a;
+  color: white;
+}
+
+.pagina-activa {
+  background-color: #145967 !important;
+  color: white !important;
+  border-color: #145967 !important;
+  font-weight: bold;
+}
+
+.botonesPaginacion a svg {
+  width: 16px;
+  height: 16px;
+  fill: #145967;
+  display: block;
+}
+
+.botonesPaginacion a:hover svg {
+  fill: white;
+}
+
+.botonesPaginacion a.desactivado {
+  opacity: 0.3;             
+  cursor: not-allowed;      
+  pointer-events: none;     
+}
+
+.contadorPaginas {
+  margin: 4px 0 0 0;
+  text-align: center;
+  font-size: 11px;
+  color: #5ea1af;
+  font-weight: 600;
 }
