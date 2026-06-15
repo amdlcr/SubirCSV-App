@@ -12,6 +12,9 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <!-- css comun -->
+        <link rel="stylesheet" href="{{ asset('css/global.css') }}">
+
     </head>
     <body class="font-sans text-gray-900 antialiased">
 
@@ -25,12 +28,6 @@
             </a>
             <h1 class="text-xl font-normal italic text-slate-50">Visualiza tus archivos CSV de forma sencilla</h1>
         </div>
-
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
 
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-slate-50 shadow-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}

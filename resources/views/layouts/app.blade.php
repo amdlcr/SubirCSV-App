@@ -11,7 +11,7 @@
         <!--  Vite(CSS y JS) -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <!-- css comun -->
-        <link rel="stylesheet" href="{{ asset('css/general.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/global.css') }}">
         @stack('styles')
        
     </head>

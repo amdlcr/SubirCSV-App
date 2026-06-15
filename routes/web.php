@@ -9,7 +9,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+     return redirect()->route('index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
     //Ruta GET: Elimina el archivo fisico del almacenamiento y redirige de vuelta a la pantalla de inicio
     Route::get('/eliminar/{archivo}', [CsvController::class, 'eliminarCsv'])->name('eliminar.csv')->where('archivo', '.*');
 });
+
 
 require __DIR__.'/auth.php';
 

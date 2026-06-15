@@ -12,9 +12,16 @@
                 </div>
             </div>
 
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('profile.partials.two-factor-authentication-form', ['user' => auth()->user()])
+                </div>
+            </div>
+
         </div>
     </div>
 @endsection
 @push('scripts')
     <script src="{{ asset('js/passwordEye.js') }}"></script>
+    <script src="{{ asset('js/global.js') }}"></script>
 @endpush
