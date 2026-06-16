@@ -8,3 +8,16 @@ body {
 a, button, select, input {
   transition: all 0.2s ease;
 }
+
+.boton-spinner {
+    display: none !important;
+}
+
+.boton-submit.cargando .boton-spinner {
+    display: inline-block !important;
+}
+
+.boton-submit.cargando .boton-icon,
+.boton-submit.cargando .boton-text {
+    display: none !important;
+}

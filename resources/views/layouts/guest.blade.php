@@ -7,9 +7,6 @@
 
         <title>{{ config('app.name', 'CSViewer') }}</title>
         
-        <!-- Fonts -->
-        <link rel="stylesheet" href="https://bunny.net">
-
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <!-- css comun -->
@@ -34,4 +31,5 @@
             </div>
         </div>
     </body>
+    <script src="{{ asset('js/global.js') }}"></script>
 </html>

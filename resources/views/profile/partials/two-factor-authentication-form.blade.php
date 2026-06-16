@@ -10,7 +10,7 @@
 
     {{--  El 2FA no se ha activado --}}
     @if(!$user->two_factor_secret)
-        <div x-data="formularioDosFactor">
+        <div x-data="formularioAutoSubmit('intentando_activar_2fa', 'form2fa')">
             <div x-show="cargando" class="mb-4 p-4 bg-blue-50 text-blue-700 text-sm rounded border border-blue-200 animate-pulse">
                 {{ __('Generando claves de seguridad y código QR. Por favor, espere...') }}
             </div>
@@ -60,7 +60,7 @@
             {{-- EL 2FA esta confirmado y activo --}}
             <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 text-sm rounded">
                 <p class="font-bold flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-4 h-4 fill-current inline-block"><path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z"/></svg>
+                    <i class="fa-solid fa-check"></i>
                     <span>{{ __('El sistema 2FA está protegiendo tu cuenta.') }}</span>
                 </p>
             </div>
@@ -78,7 +78,7 @@
                     </form>
                 @else
                     <p class="text-sm text-amber-600 bg-amber-50 p-3 rounded border border-amber-200 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-4 h-4 fill-current inline-block"><path d="M320 64C334.7 64 348.2 72.1 355.2 85L571.2 485C577.9 497.4 577.6 512.4 570.4 524.5C563.2 536.6 550.1 544 536 544L104 544C89.9 544 76.8 536.6 69.6 524.5C62.4 512.4 62.1 497.4 68.8 485L284.8 85C291.8 72.1 305.3 64 320 64zM320 416C302.3 416 288 430.3 288 448C288 465.7 302.3 480 320 480C337.7 480 352 465.7 352 448C352 430.3 337.7 416 320 416zM320 224C301.8 224 287.3 239.5 288.6 257.7L296 361.7C296.9 374.2 307.4 384 319.9 384C332.5 384 342.9 374.3 343.8 361.7L351.2 257.7C352.5 239.5 338.1 224 319.8 224z"/></svg>
+                        <i class="fa-solid fa-triangle-exclamation"></i>
                         <span>{{ __('Solo un usuario con rol de Administrador puede desactivar el 2FA de esta cuenta.') }}</span>
                     </p>
                 @endif
@@ -106,15 +106,15 @@
                 </div>
 
                 {{-- Regenerar codigos de recuperacion --}}
-                <div x-data="formularioCodigos">
+                <div x-data="formularioAutoSubmit('intentando_regenerar_codigos', 'formCodigos')">
                     <div x-show="cargando" class="mb-4 p-4 bg-blue-50 text-blue-700 text-sm rounded border border-blue-200 animate-pulse">
                         {{ __('Regenerando nuevos códigos de emergencia. Por favor, espera...') }}
                     </div>
                     <form x-show="!cargando" x-ref="formCodigos" method="POST" action="{{ route('two-factor.recovery-codes') }}" @submit="guardarIntento()">
                         @csrf
-                        <x-secondary-button type="submit">
+                        <x-primary-button type="submit" class="boton-submit inline-flex items-center justify-center gap-2">
                             {{ __('Regenerar Códigos de Recuperación') }}
-                        </x-secondary-button>
+                        </x-primary-button>
                     </form>
                 </div>
             </div>

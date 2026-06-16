@@ -1,32 +1,61 @@
-
 document.addEventListener('alpine:init', () => {
-    //Para que cargue automaticamente la acción y no espere al activar el 2FA 
-    Alpine.data('formularioDosFactor', () => ({
+    Alpine.data('formularioAutoSubmit', (storageKey, formRef) => ({
         cargando: false,
-        init() {
-            if (sessionStorage.getItem('intentando_activar_2fa') === 'true') {
-                sessionStorage.removeItem('intentando_activar_2fa');
-                this.cargando = true;
-                this.$refs.form2fa.submit();
-            }
-        },
-        guardarIntento() {
-            sessionStorage.setItem('intentando_activar_2fa', 'true');
-        }
-    }));
 
-    //Para que cargue automaticamente la acción y no espere al regenerar los Códigos de Recuperación
-    Alpine.data('formularioCodigos', () => ({
-        cargando: false,
         init() {
-            if (sessionStorage.getItem('intentando_regenerar_codigos') === 'true') {
-                sessionStorage.removeItem('intentando_regenerar_codigos');
+            if (sessionStorage.getItem(storageKey) === '1') {
+                sessionStorage.removeItem(storageKey);
+
                 this.cargando = true;
-                this.$refs.formCodigos.submit();
+
+                this.$nextTick(() => {
+                    this.$refs[formRef].submit();
+                });
             }
         },
+
         guardarIntento() {
-            sessionStorage.setItem('intentando_regenerar_codigos', 'true');
+            this.cargando = true;
+            sessionStorage.setItem(storageKey, '1');
         }
     }));
+});
+
+
+//Efecto ojos
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.toggle-password').forEach(toggle => {
+
+        toggle.addEventListener('click', () => {
+
+            const wrapper = toggle.closest('.password-wrapper');
+            const input = wrapper.querySelector('.password-input');
+            const icon = wrapper.querySelector('.password-icon');
+
+            const isPassword = input.type === 'password';
+
+            if (isPassword) {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    });
+});
+
+//Spinner
+document.addEventListener('submit', (e) => {
+    const form = e.target;
+
+    if (!form.checkValidity()) return;
+
+    const boton = form.querySelector('.boton-submit');
+    if (!boton) return;
+
+    boton.classList.add('cargando');
+    boton.disabled = true;
 });

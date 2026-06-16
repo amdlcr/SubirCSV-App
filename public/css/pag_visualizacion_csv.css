@@ -34,11 +34,7 @@
   background: rgba(255, 255, 255, 0.9);
 }
 
-.botonVolver svg {
-  width: 24px;
-  height: 24px;
-  fill: #0c4d5a; 
-}
+
 
 h4 {
   margin: 0;
@@ -166,12 +162,6 @@ h6 {
   transform: scale(0.97);
 }
 
-.btn-refrescar svg {
-  width: 18px;
-  height: 18px;
-  stroke: #145967; 
-}
-
 /*-- Tabla --*/
 .tabla {
   width: 100%;
@@ -270,16 +260,6 @@ h6 {
   font-weight: bold;
 }
 
-.botonesPaginacion a svg {
-  width: 16px;
-  height: 16px;
-  fill: #145967;
-  display: block;
-}
-
-.botonesPaginacion a:hover svg {
-  fill: white;
-}
 
 .botonesPaginacion a.desactivado {
   opacity: 0.3;             

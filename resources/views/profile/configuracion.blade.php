@@ -21,7 +21,3 @@
         </div>
     </div>
 @endsection
-@push('scripts')
-    <script src="{{ asset('js/passwordEye.js') }}"></script>
-    <script src="{{ asset('js/global.js') }}"></script>
-@endpush

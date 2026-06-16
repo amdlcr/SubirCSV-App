@@ -13,7 +13,7 @@
  <!-- CABECERA  -->
     <div class="bloque_cabecera">
         <a href="{{ route('eliminar.csv', ['archivo' => $archivo]) }}" class="botonVolver">
-            <svg xmlns="http://w3.org" viewBox="0 0 640 640"><path d="M268.2 82.4C280.2 87.4 288 99 288 112L288 192L400 192C497.2 192 576 270.8 576 368C576 481.3 494.5 531.9 475.8 542.1C473.3 543.5 470.5 544 467.7 544C456.8 544 448 535.1 448 524.3C448 516.8 452.3 509.9 457.8 504.8C467.2 496 480 478.4 480 448.1C480 395.1 437 352.1 384 352.1L288 352.1L288 432.1C288 445 280.2 456.7 268.2 461.7C256.2 466.7 242.5 463.9 233.3 454.8L73.3 294.8C60.8 282.3 60.8 262 73.3 249.5L233.3 89.5C242.5 80.3 256.2 77.6 268.2 82.6z"/></svg>
+           <i class="fa-solid fa-reply text-sky-900"></i>
         </a>
         <h6>Datos del Archivo:</h6>
         <h4>{{ $nombreArchivo }}</h4>
@@ -61,7 +61,7 @@
                 <button type="submit" name="botonBuscar">Buscar</button>
                 
                 <a href="{{ route('mostrar.csv', ['archivo' => $archivo]) }}" class="btn-refrescar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
+                   <i class="fa-solid fa-arrows-rotate text-sky-900"></i>
                 </a>
             </div>
         </form>
