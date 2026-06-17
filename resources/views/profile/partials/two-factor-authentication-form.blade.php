@@ -1,28 +1,29 @@
 <section>
+  
     <header class="mb-6">
         <h2 class="text-lg font-medium text-gray-900">
             {{ __('Autenticación de Doble Factor (2FA)') }}
         </h2>
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Añade una capa extra de seguridad a tu cuenta utilizando códigos temporales con Google Authenticator.') }}
-        </p>
     </header>
+
+    @php
+        $user = auth()->user()->fresh();
+    @endphp
 
     {{--  El 2FA no se ha activado --}}
     @if(!$user->two_factor_secret)
-        <div x-data="formularioAutoSubmit('intentando_activar_2fa', 'form2fa')">
-            <div x-show="cargando" class="mb-4 p-4 bg-blue-50 text-blue-700 text-sm rounded border border-blue-200 animate-pulse">
-                {{ __('Generando claves de seguridad y código QR. Por favor, espere...') }}
-            </div>
-
-            <form x-show="!cargando" x-ref="form2fa" method="POST" action="{{ route('two-factor.enable') }}" @submit="guardarIntento()">
+        <div class="p-4 bg-gray-50 border rounded">
+            <p class="mb-4 text-sm text-gray-600">
+                {{ __('Activa la autenticación en dos pasos para proteger tu cuenta.') }}
+            </p>
+    
+            <form method="POST" action="{{ url('/user/two-factor-authentication') }}">
                 @csrf
-                <x-primary-button type="submit">
-                    {{ __('Activar Doble Factor') }}
-                </x-primary-button>
+                    <x-primary-button type="submit">
+                        {{ __('Activar Doble Factor') }}
+                    </x-primary-button>
             </form>
-        </div>
-
+        </div>  
     @else
         {{-- Se crear el secreto pero no esta confirmado --}}
         @if(is_null($user->two_factor_confirmed_at))
@@ -45,7 +46,7 @@
             </p>
 
             {{--  Formulario de validacion del código TOTP para confirmar la activación del 2FA--}}
-            <form method="POST" action="{{ route('two-factor.confirm') }}" class="space-y-4">
+            <form method="POST" action="{{ url('/user/confirmed-two-factor-authentication') }}" class="space-y-4">
                 @csrf
                 <div>
                     <x-input-label for="code" :value="__('Introduce el código de 6 dígitos de tu app')" />
@@ -106,17 +107,13 @@
                 </div>
 
                 {{-- Regenerar codigos de recuperacion --}}
-                <div x-data="formularioAutoSubmit('intentando_regenerar_codigos', 'formCodigos')">
-                    <div x-show="cargando" class="mb-4 p-4 bg-blue-50 text-blue-700 text-sm rounded border border-blue-200 animate-pulse">
-                        {{ __('Regenerando nuevos códigos de emergencia. Por favor, espera...') }}
-                    </div>
-                    <form x-show="!cargando" x-ref="formCodigos" method="POST" action="{{ route('two-factor.recovery-codes') }}" @submit="guardarIntento()">
+                <form method="POST" action="{{ url('/user/two-factor-recovery-codes') }}">
                         @csrf
                         <x-primary-button type="submit" class="boton-submit inline-flex items-center justify-center gap-2">
                             {{ __('Regenerar Códigos de Recuperación') }}
                         </x-primary-button>
                     </form>
-                </div>
+
             </div>
         @endif
     @endif

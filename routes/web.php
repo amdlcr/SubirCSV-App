@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CsvController;
+use App\Http\Middleware\NoCache;
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -12,13 +14,8 @@ Route::get('/dashboard', function () {
      return redirect()->route('index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::get('/configuracion', function () {return view('profile.configuracion');})->name('profile.configuracion');
-
+Route::middleware(['auth',NoCache::class])->group(function () {
+ 
     //Ruta GET: Carga la pantalla de bienvenida 
     Route::get('/inicio', [CsvController::class, 'index'])->name('index');
 
@@ -32,6 +29,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/eliminar/{archivo}', [CsvController::class, 'eliminarCsv'])->name('eliminar.csv')->where('archivo', '.*');
 });
 
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/configuracion', function () {return view('profile.configuracion');})->name('profile.configuracion');
+});
 
 require __DIR__.'/auth.php';
 

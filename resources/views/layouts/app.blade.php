@@ -14,8 +14,8 @@
     </head>
     <body class="min-h-screen w-screen m-0 p-0 overflow-x-hidden">
 
-    <!-- Fondo  -->
-    <div class="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10" style="background-image: url('{{ asset('images/fondo-web.jpg') }}');"></div>
+    
+    <div class="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10" ></div>
 
      
         <div class="min-h-screen flex flex-col">

@@ -8,7 +8,7 @@
 
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
-    <form method="POST" action="{{ route('login') }}" id="form-login">
+    <form class="form-con-spinner" method="POST" action="{{ route('login') }}" id="form-login">
         @csrf
 
         <!-- Email Address -->
@@ -65,9 +65,12 @@
             <x-primary-button class="boton-submit inline-flex items-center justify-center gap-2">
                 <i class="fa-solid fa-arrow-right-to-bracket boton-icon"></i>
 
-                <i class="fa-solid fa-spinner fa-spin boton-spinner"></i>
+                <!-- Spinner -->
+                <i class="fa-solid fa-spinner fa-spin boton-spinner hidden"></i>
 
+                <!-- Texto -->
                 <span class="boton-text">Iniciar Sesión</span>
+
             </x-primary-button>
             
             <!-- Recuperar contraseña -->

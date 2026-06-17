@@ -7,7 +7,7 @@
         <span class="text-sm font-semibold text-blue-500 mt-2">Crea tu cuenta</span>
     </div>
 
-    <form method="POST" action="{{ route('register') }}" id="form-register">
+    <form class="form-con-spinner" method="POST" action="{{ route('register') }}" id="form-register">
         @csrf
 
         <!-- Name -->

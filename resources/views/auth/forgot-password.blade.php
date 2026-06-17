@@ -6,7 +6,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('password.email') }}" id="form-forgot-password">
+    <form class="form-con-spinner" method="POST" action="{{ route('password.email') }}" id="form-forgot-password">
         @csrf
 
         <!-- Email Address -->

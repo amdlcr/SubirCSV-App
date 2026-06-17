@@ -13,10 +13,9 @@
         <link rel="stylesheet" href="{{ asset('css/global.css') }}">
 
     </head>
-    <body class="font-sans text-gray-900 antialiased">
+    <body class="font-sans text-gray-900 antialiased overflow-x-hidden">
 
-        <!-- Fondo imagen-->
-        <div class="min-h-screen w-screen overflow-y-auto flex flex-col justify-start items-center pt-8 pb-12 bg-cover bg-center" style="background-image: url('{{ asset('images/fondo-web.jpg') }}');">
+        <div class="min-h-screen w-full overflow-y-auto flex flex-col justify-start items-center pt-4 pb-4 bg-cover bg-center">
 
        <!-- Logo -->
         <div class="flex flex-col items-center text-center">
